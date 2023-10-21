@@ -1,12 +1,13 @@
 import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
-import App from './App';
+import { WrappedApp, App } from './App';
 
 describe('App', () => {
   it('Renders hello world', () => {
     // ARANGE
-    render(<App />);
+    render(<WrappedApp />);
     // ACT
     // const message = screen.queryByText(/Hello World/i);
 
@@ -20,7 +21,7 @@ describe('App', () => {
   });
   it('Renders hi', () => {
     // ARANGE
-    render(<App />);
+    render(<WrappedApp />);
     // ACT
     // const message = screen.queryByText(/Hello World/i);
 
@@ -31,5 +32,18 @@ describe('App', () => {
       })
     ).toHaveTextContent('hi');
     // expect(message).toBeVisible();
+  });
+
+  it('Renders not found if invalid path', () => {
+    render(
+      <MemoryRouter initialEntries={['/this-route-does-not-eaist']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+      })
+    ).toHaveTextContent('404 Not Found');
   });
 });
